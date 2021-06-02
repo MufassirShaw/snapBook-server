@@ -1,44 +1,15 @@
-import { ApolloServer, gql } from 'apollo-server';
-// import mongoose from 'mongoose';
+import { ApolloServer } from 'apollo-server';
+import mongoose from 'mongoose';
 
-const books = [
-  {
-    title: 'The Awakening',
-    author: 'Kate Chopin',
-  },
-  {
-    title: 'City of Glass',
-    author: 'Paul Auster',
-  },
-];
+import typeDefs from './graphql/schema';
+import { rootResolver } from './graphql/resolvers';
 
-const typeDefs = gql`
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
-
-  # This "Book" type defines the queryable fields for every book in our data source.
-  type Book {
-    title: String
-    author: String
-  }
-
-  # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
-  type Query {
-    books: [Book]
-  }
-`;
-const resolvers = {
-  Query: {
-    books: () => books,
-  },
-};
 const createSever = async () => {
-  //   await mongoose.connect('mongodb://127.0.0.1:27017/snapbook', {
-  //     useNewUrlParser: true,
-  //     useUnifiedTopology: true,
-  //   });
-  const server = new ApolloServer({ typeDefs, resolvers });
+  await mongoose.connect('mongodb://127.0.0.1:27017/snapbook', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  const server = new ApolloServer({ typeDefs, resolvers: rootResolver });
 
   // The `listen` method launches a web server.
   server.listen({ port: 4001 }).then(({ url }) => {
