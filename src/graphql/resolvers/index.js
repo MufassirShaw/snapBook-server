@@ -1,5 +1,10 @@
-import authResolver from './auth';
+import { AuthMutations, AuthQueries } from './auth';
 
-export const rootResolver = {
-  ...authResolver,
+export const resolvers = {
+  Query: {
+    ...AuthQueries,
+  },
+  Mutation: {
+    ...AuthMutations,
+  },
 };
